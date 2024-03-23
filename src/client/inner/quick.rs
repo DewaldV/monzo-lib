@@ -29,6 +29,16 @@ impl Client<Quick> {
         Self { inner_client }
     }
 
+    /// Update the URL for the Monzo Client.
+    ///
+    /// This allows us to update the URL of a Monzo Client mostly used
+    /// for testing against a test HTTP server that can serve stubbed
+    /// responsed.
+    pub fn with_url(mut self, url: impl Into<String>) -> Self {
+        self.inner_client.url = url.into();
+        self
+    }
+
     /// Upgrade a Client by adding refresh tokens.
     ///
     /// A client that has refresh tokens is able to refresh it's authentication
