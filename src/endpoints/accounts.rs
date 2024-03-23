@@ -38,9 +38,11 @@ pub struct Account {
     pub business_id: Option<String>,
 
     /// The account number
+    #[serde(default)]
     pub account_number: String,
 
     /// The sort code
+    #[serde(default)]
     pub sort_code: String,
 }
 
@@ -71,6 +73,12 @@ pub enum Type {
 
     /// A monzo business account
     UkBusiness,
+
+    /// A monzo rewards account
+    UkRewards,
+
+    /// A monzo prepaid account
+    UkPrepaid,
 }
 
 pub(crate) use list::Request as List;
