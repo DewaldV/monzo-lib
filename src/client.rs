@@ -1,5 +1,6 @@
 //! Monzo API clients
 
+use std::collections::HashMap;
 use std::future::Future;
 
 use serde::{de::DeserializeOwned, Deserialize};
@@ -281,6 +282,40 @@ where
     /// in the first 5 minutes after authorising the Client.*
     pub fn transaction<'a>(&'a self, transaction_id: &'a str) -> transactions::Get<'a, C> {
         transactions::Get::new(&self.inner_client, transaction_id)
+    }
+
+
+    /// Store key-value metadata against a transaction
+    ///
+    /// Updating the `notes` key applies the value to the transaction's top-level notes property.
+    /// To delete a key, set its value to an empty string.
+    ///
+    /// # Example
+    /// ```no_run
+    /// use std::collections::HashMap;
+    /// use monzo::Client;
+    /// # #[tokio::main]
+    /// # async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    /// # let access_token = "ACCESS_TOKEN";
+    /// # let client = Client::new(access_token);
+    /// #
+    /// let transaction_id = "TRANSACTION_ID";
+    /// let metadata = HashMap::from([
+    ///     (String::from("Foo"), String::from("Bar")),
+    /// ]);
+    ///
+    /// let annotated_transaction = client.annotate_transaction(transaction_id, metadata).await?;
+    /// #
+    /// # Ok(())
+    /// # }
+    ///
+    /// ```
+    pub async fn annotate_transaction(
+        &self,
+        transaction_id: &str,
+        metadata: HashMap<String, String>,
+    ) -> Result<transactions::Transaction> {
+        transactions::Annotate::new(&self.inner_client, transaction_id, metadata).send().await
     }
 
     /// Return information about the current session

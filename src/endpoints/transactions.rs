@@ -11,6 +11,8 @@ mod list;
 pub use list::Request as List;
 mod get;
 pub use get::Request as Get;
+mod annotate;
+pub use annotate::Request as Annotate;
 
 /// A Monzo transaction
 #[allow(clippy::struct_excessive_bools)]
