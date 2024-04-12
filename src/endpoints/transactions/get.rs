@@ -1,3 +1,5 @@
+use serde::Deserialize;
+
 use super::Transaction;
 use crate::{client, endpoints::Endpoint, Result};
 
@@ -56,6 +58,20 @@ where
 
     /// Consume the request and return the [`Transaction`]
     pub async fn send(self) -> Result<Transaction> {
-        self.client.handle_request(&self).await
+        let response: Response = self.client.handle_request(&self).await?;
+
+        Ok(response.into())
+    }
+}
+
+
+#[derive(Deserialize, Debug)]
+pub struct Response {
+    transaction: Transaction,
+}
+
+impl From<Response> for Transaction {
+    fn from(response: Response) -> Self {
+        response.transaction
     }
 }
